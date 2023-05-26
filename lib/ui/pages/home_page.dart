@@ -88,7 +88,7 @@ class _HomePageState extends State<HomePage> {
   void _onTap(BuildContext context, Todo location, int posicion) {
     logInfo(location.title);
     logInfo('$posicion');
-    todoController.setCompleted(posicion);
+    todoController.setCompleted(location);
   }
 
   Widget _itemTitle(Todo item) {

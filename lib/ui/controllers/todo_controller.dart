@@ -27,14 +27,13 @@ class TodoController extends GetxController {
   }
 
   void removeItem(item) async {
-    _todoList.remove(item);
+    await todoUseCase.deleteTodo(item.id);
+    await getAllTodos();
   }
 
-  void setCompleted(index) async {
-    logInfo('setCompleted $index');
-    _todoList[index].completed == 0
-        ? _todoList[index].completed = 1
-        : _todoList[index].completed = 0;
-    _todoList.refresh();
+  void setCompleted(Todo item) async {
+    item.completed == 0 ? item.completed = 1 : item.completed = 0;
+    await todoUseCase.updateTodo(item);
+    await getAllTodos();
   }
 }

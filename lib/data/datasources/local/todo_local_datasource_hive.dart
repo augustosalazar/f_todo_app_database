@@ -2,6 +2,7 @@ import 'package:hive/hive.dart';
 import 'package:loggy/loggy.dart';
 
 class UserLocalDataSourceHive {
+  /*
   addUser(RandomUser user) {
     Hive.box('users').add(UserDB(
         gender: user.gender,
@@ -43,4 +44,5 @@ class UserLocalDataSourceHive {
             email: user.email,
             picture: user.picture));
   }
+  */
 }
