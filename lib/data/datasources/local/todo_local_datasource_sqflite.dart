@@ -1,10 +1,9 @@
 import 'dart:async';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
+import '../../../domain/entities/todo.dart';
 
-import '../../../domain/entities/random_user.dart';
-
-class UserLocalDataSource {
+class TodoLocalDataSource {
   Database? _database;
 
   Future<Database> get database async {
@@ -23,18 +22,18 @@ class UserLocalDataSource {
         'CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, gender TEXT, city TEXT, email TEXT, picture TEXT)');
   }
 
-  Future<void> addUser(RandomUser user) async {
+  Future<void> addTodo(Todo todo) async {
     print("Adding user to db");
     final db = await database;
 
     await db.insert(
       'users',
-      user.toMap(),
+      todo.toMap(),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
   }
 
-  Future<List<RandomUser>> getAllUsers() async {
+  Future<List<Todo>> getAllUsers() async {
     // Get a reference to the database.
     final db = await database;
 
@@ -43,14 +42,7 @@ class UserLocalDataSource {
 
     // Convert the List<Map<String, dynamic> into a List<Dog>.
     return List.generate(maps.length, (i) {
-      return RandomUser(
-        id: maps[i]['id'],
-        name: maps[i]['name'],
-        gender: maps[i]['gender'],
-        email: maps[i]['email'],
-        city: maps[i]['city'],
-        picture: maps[i]['picture'],
-      );
+      return Todo.fromMap(maps[i]);
     });
   }
 

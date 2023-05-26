@@ -1,33 +1,29 @@
 import 'package:loggy/loggy.dart';
-import '../../data/datasources/local/user_local_datasource_hive.dart';
-import '../../data/datasources/local/user_local_datasource_sqflite.dart';
-import '../../data/datasources/remote/user_remote_datasource.dart';
-import '../entities/random_user.dart';
 
-class UserRepository {
-  late UserRemoteDatatasource remoteDataSource;
-  late UserLocalDataSource localDataSource;
-  //late UserLocalDataSourceHive localDataSource;
+import '../../data/datasources/local/todo_local_datasource_sqflite.dart';
+import '../entities/todo.dart';
 
-  UserRepository() {
-    logInfo("Starting UserRepository");
-    remoteDataSource = UserRemoteDatatasource();
-    localDataSource = UserLocalDataSource();
-    //localDataSource = UserLocalDataSourceHive();
+class TodoRepository {
+  late TodoLocalDataSource localDataSource;
+  //late TodoLocalDataSourceHive localDataSource;
+
+  TodoRepository() {
+    logInfo("Starting TodoRepository");
+    localDataSource = TodoLocalDataSource();
+    //localDataSource = TodoLocalDataSourceHive();
   }
 
-  Future<bool> getUser() async {
-    RandomUser user = await remoteDataSource.getUser();
-    await localDataSource.addUser(user);
+  Future<bool> addTodo(Todo todo) async {
+    await localDataSource.addTodo(todo);
     return Future.value(true);
   }
 
-  Future<List<RandomUser>> getAllUsers() async =>
-      await localDataSource.getAllUsers();
+  Future<List<Todo>> getAllTodos() async => await localDataSource.getAllTodos();
 
-  Future<void> deleteTodo(id) async => await localDataSource.deleteUser(id);
+  Future<void> deleteTodo(id) async => await localDataSource.deleteTodo(id);
 
   Future<void> deleteAll() async => await localDataSource.deleteAll();
 
-  Future<void> updateUser(user) async => await localDataSource.updateUser(user);
+  Future<void> updateTodo(Todo todo) async =>
+      await localDataSource.updateTodo(Todo);
 }
