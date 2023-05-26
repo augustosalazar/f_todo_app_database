@@ -9,7 +9,8 @@ class Todo {
   late String title;
   late String body;
   late int completed;
-  late TodoType type;
+  TodoType type = TodoType.DEFAULT;
+
   Todo(
       {required this.title,
       required this.body,

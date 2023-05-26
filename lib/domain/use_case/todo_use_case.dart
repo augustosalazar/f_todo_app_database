@@ -1,11 +1,11 @@
 import 'package:get/get.dart';
 import '../entities/todo.dart';
-import '../repositories/Todo_repository.dart';
+import '../repositories/todo_repository.dart';
 
 class TodoUseCase {
   TodoRepository repository = Get.find();
 
-  Future<void> addTodo() async => await repository.getTodo();
+  Future<void> addTodo(Todo todo) async => await repository.addTodo(todo);
 
   Future<List<Todo>> getAllTodos() async => await repository.getAllTodos();
 
@@ -13,5 +13,5 @@ class TodoUseCase {
 
   Future<void> deleteAll() async => await repository.deleteAll();
 
-  Future<void> updateTodo(todo) async => await repository.updateTodo(Todo);
+  Future<void> updateTodo(todo) async => await repository.updateTodo(todo);
 }

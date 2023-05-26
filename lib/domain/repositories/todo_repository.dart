@@ -13,10 +13,7 @@ class TodoRepository {
     //localDataSource = TodoLocalDataSourceHive();
   }
 
-  Future<bool> addTodo(Todo todo) async {
-    await localDataSource.addTodo(todo);
-    return Future.value(true);
-  }
+  Future<void> addTodo(Todo todo) async => await localDataSource.addTodo(todo);
 
   Future<List<Todo>> getAllTodos() async => await localDataSource.getAllTodos();
 
@@ -25,5 +22,5 @@ class TodoRepository {
   Future<void> deleteAll() async => await localDataSource.deleteAll();
 
   Future<void> updateTodo(Todo todo) async =>
-      await localDataSource.updateTodo(Todo);
+      await localDataSource.updateTodo(todo);
 }
