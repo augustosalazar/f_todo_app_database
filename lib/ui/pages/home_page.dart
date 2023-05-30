@@ -100,7 +100,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _itemTitle(Todo item) {
-    return Text('${item.title} - ${item.id} - ${item.type}',
+    return Text(item.title,
         style: const TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold));
   }
 

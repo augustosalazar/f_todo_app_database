@@ -19,7 +19,6 @@ class TodoTypeDropdown extends StatelessWidget {
   Widget returnDropDown() {
     logInfo('TodoTypeDropdown $selected');
     return DropdownButton<String>(
-      key: const Key('todoTypeDropdown'),
       value: selected,
       icon: const Icon(Icons.arrow_downward),
       iconSize: 24,
