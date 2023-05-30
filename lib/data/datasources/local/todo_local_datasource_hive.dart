@@ -6,6 +6,8 @@ import '../../../domain/entities/todo.dart';
 
 class TodoLocalDataSourceHive {
   addTodo(Todo todo) async {
+    logInfo(
+        "Adding todo to database with title: ${todo.title}  body: ${todo.body} completed: ${todo.completed}  type: ${todo.type}");
     TodoHive todoHive = TodoHive.fromTodo(todo: todo);
     Hive.box('todos').add(todoHive);
   }
@@ -14,7 +16,11 @@ class TodoLocalDataSourceHive {
     return Hive.box('todos').values.map((e) {
       logInfo("Entry with key: ${e.key}");
       return Todo(
-          id: e.key, title: e.title, body: e.body, completed: e.completed);
+          id: e.key,
+          title: e.title,
+          body: e.body,
+          completed: e.completed,
+          type: TodoType.values[e.type]);
     }).toList();
   }
 

@@ -15,15 +15,20 @@ class TodoHive extends HiveObject {
   int completed;
 
   @HiveField(3)
-  int type = 0;
+  int type;
 
-  TodoHive({required this.title, required this.body, required this.completed});
+  TodoHive(
+      {required this.title,
+      required this.body,
+      required this.completed,
+      required this.type});
 
   Todo toTodo() {
     return Todo(
       title: title,
       body: body,
       completed: completed,
+      type: TodoType.values[type],
     );
   }
 
@@ -34,6 +39,7 @@ class TodoHive extends HiveObject {
       title: todo.title,
       body: todo.body,
       completed: todo.completed,
+      type: todo.type.index,
     );
   }
 }

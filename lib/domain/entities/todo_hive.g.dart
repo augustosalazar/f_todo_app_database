@@ -20,7 +20,8 @@ class TodoHiveAdapter extends TypeAdapter<TodoHive> {
       title: fields[0] as String,
       body: fields[1] as String,
       completed: fields[2] as int,
-    )..type = fields[3] as int;
+      type: fields[3] as int,
+    );
   }
 
   @override
