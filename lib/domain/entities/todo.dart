@@ -12,7 +12,8 @@ class Todo {
   TodoType type = TodoType.DEFAULT;
 
   Todo(
-      {required this.title,
+      {this.id,
+      required this.title,
       required this.body,
       required this.completed,
       this.type = TodoType.DEFAULT});

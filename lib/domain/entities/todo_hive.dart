@@ -12,7 +12,7 @@ class TodoHive extends HiveObject {
   String body;
 
   @HiveField(2)
-  bool completed;
+  int completed;
 
   @HiveField(3)
   int type = 0;
@@ -23,7 +23,7 @@ class TodoHive extends HiveObject {
     return Todo(
       title: title,
       body: body,
-      completed: completed ? 1 : 0,
+      completed: completed,
     );
   }
 
@@ -33,7 +33,7 @@ class TodoHive extends HiveObject {
     return TodoHive(
       title: todo.title,
       body: todo.body,
-      completed: todo.completed == 1 ? true : false,
+      completed: todo.completed,
     );
   }
 }

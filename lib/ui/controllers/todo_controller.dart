@@ -7,16 +7,17 @@ import '../../domain/entities/todo.dart';
 class TodoController extends GetxController {
   final _todoList = <Todo>[].obs;
 
-  List<Todo> get todoList => _todoList.value;
-
-  TodoUseCase todoUseCase = Get.find();
-
   TodoController() {
     getAllTodos();
   }
 
+  List<Todo> get todoList => _todoList.value;
+
+  TodoUseCase todoUseCase = Get.find();
+
   Future<void> getAllTodos() async {
-    //logInfo("userController -> getAllUsers");
+    logInfo("userController -> getAllUsers");
+    _todoList.clear();
     var list = await todoUseCase.getAllTodos();
     _todoList.value = list;
   }
@@ -34,6 +35,11 @@ class TodoController extends GetxController {
   void setCompleted(Todo item) async {
     item.completed == 0 ? item.completed = 1 : item.completed = 0;
     await todoUseCase.updateTodo(item);
+    await getAllTodos();
+  }
+
+  void removeAll() async {
+    await todoUseCase.deleteAll();
     await getAllTodos();
   }
 }

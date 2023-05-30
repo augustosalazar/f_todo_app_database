@@ -11,7 +11,11 @@ class TodoLocalDataSourceHive {
   }
 
   Future<List<Todo>> getAllTodos() async {
-    return Hive.box('todos').values.map((TodoHive e) => e.toTodo()).toList();
+    return Hive.box('todos').values.map((e) {
+      logInfo("Entry with key: ${e.key}");
+      return Todo(
+          id: e.key, title: e.title, body: e.body, completed: e.completed);
+    }).toList();
   }
 
   deleteAll() async {
@@ -20,11 +24,12 @@ class TodoLocalDataSourceHive {
   }
 
   deleteTodo(index) async {
-    await Hive.box('todos').deleteAt(index);
+    await Hive.box('todos').delete(index);
   }
 
   updateTodo(Todo todo) async {
     TodoHive todoHive = TodoHive.fromTodo(todo: todo);
-    await Hive.box('todos').putAt(todo.id!, todoHive);
+    int id = todo.id!;
+    await Hive.box('todos').put(id, todoHive);
   }
 }

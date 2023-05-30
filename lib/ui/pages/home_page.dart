@@ -20,6 +20,14 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Todo App"),
+        actions: [
+          IconButton(
+              key: const Key('deleteAllButton'),
+              onPressed: () {
+                todoController.removeAll();
+              },
+              icon: const Icon(Icons.delete_forever))
+        ],
       ),
       body: _list(),
       floatingActionButton: FloatingActionButton(
@@ -92,7 +100,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _itemTitle(Todo item) {
-    return Text(item.title,
+    return Text('${item.title} - ${item.id}',
         style: const TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold));
   }
 
