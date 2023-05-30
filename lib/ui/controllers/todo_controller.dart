@@ -16,7 +16,7 @@ class TodoController extends GetxController {
   }
 
   Future<void> getAllTodos() async {
-    logInfo("userController -> getAllUsers");
+    //logInfo("userController -> getAllUsers");
     var list = await todoUseCase.getAllTodos();
     _todoList.value = list;
   }
