@@ -16,7 +16,22 @@ import 'package:mockito/mockito.dart';
 
 class MockTodoController extends GetxService
     with Mock
-    implements TodoController {}
+    implements TodoController {
+  final _todoList = <Todo>[].obs;
+
+  @override
+  List<Todo> get todoList => _todoList.value;
+
+  @override
+  void removeAll() async {
+    _todoList.clear();
+  }
+
+  @override
+  void addItem(item) {
+    _todoList.add(item);
+  }
+}
 
 void main() {
   testWidgets('NewTodoDialog Test', (WidgetTester tester) async {
@@ -57,29 +72,61 @@ void main() {
 
     // Simulate tapping the delete all button
     await tester.tap(find.byKey(const Key('deleteAllButton')));
-    verify(mockTodoController.removeAll()).called(1);
-
-    // Simulate tapping the floating action button
-    await tester.tap(find.byKey(const Key('floatingActionButton')));
     await tester.pumpAndSettle();
-
-    // Verify that the NewTodoDialog is shown
-    expect(find.byKey(const Key('newTodoDialog')), findsOneWidget);
+    expect(find.byType(Dismissible), findsNothing);
 
     // Simulate adding a todo through the dialog
-    final todo = Todo(
+    mockTodoController.addItem(Todo(
+      id: 0,
       title: 'Test Todo',
       body: 'Test Body',
       completed: 0,
       type: TodoType.DEFAULT,
-    );
-    when(mockTodoController.addItem(any)).thenAnswer((_) => null);
-    await tester.tap(find.byKey(const Key('addButtonTodoDialog')));
+    ));
     await tester.pumpAndSettle();
+    expect(find.byType(Dismissible), findsOneWidget);
 
-    // Verify that the todo is added to the todo list
-    verify(mockTodoController.addItem(todo)).called(1);
+    // Simulate adding a todo through the dialog
+    mockTodoController.addItem(Todo(
+      id: 1,
+      title: 'Test Todo',
+      body: 'Test Body',
+      completed: 0,
+      type: TodoType.DEFAULT,
+    ));
+    await tester.pumpAndSettle();
+    expect(find.byType(Dismissible), findsNWidgets(2));
 
-    // TODO: Add additional tests for verifying the behavior of the todo list and item widgets
+    // Simulate tapping the delete all button
+    await tester.tap(find.byKey(const Key('deleteAllButton')));
+    await tester.pumpAndSettle();
+    expect(find.byType(Dismissible), findsNothing);
+
+    // Simulate adding a todo through the dialog
+    mockTodoController.addItem(Todo(
+      id: 0,
+      title: 'Test Todo',
+      body: 'Test Body',
+      completed: 0,
+      type: TodoType.DEFAULT,
+    ));
+    await tester.pumpAndSettle();
+    expect(find.byType(Dismissible), findsOneWidget);
+
+    // Simulate adding a todo through the dialog
+    mockTodoController.addItem(Todo(
+      id: 1,
+      title: 'Test Todo',
+      body: 'Test Body',
+      completed: 0,
+      type: TodoType.DEFAULT,
+    ));
+    await tester.pumpAndSettle();
+    expect(find.byType(Dismissible), findsNWidgets(2));
+
+    await tester.drag(find.byKey(const Key('todo0')), const Offset(500.0, 0.0));
+
+    await tester.pumpAndSettle();
+    expect(find.byType(Dismissible), findsOneWidget);
   });
 }

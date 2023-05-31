@@ -50,7 +50,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget _item(Todo element, int posicion) {
     return Dismissible(
-      key: UniqueKey(),
+      key: Key('todo${element.id}'),
       background: Container(
           color: Colors.red,
           alignment: Alignment.centerLeft,
