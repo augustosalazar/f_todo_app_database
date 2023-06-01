@@ -14,7 +14,6 @@ class TodoLocalDataSourceHive {
 
   Future<List<Todo>> getAllTodos() async {
     return Hive.box('todos').values.map((e) {
-      logInfo("Entry with key: ${e.key}");
       return Todo(
           id: e.key,
           title: e.title,
@@ -30,10 +29,13 @@ class TodoLocalDataSourceHive {
   }
 
   deleteTodo(index) async {
+    logInfo("Deleting todo from database with index: $index");
     await Hive.box('todos').delete(index);
   }
 
   updateTodo(Todo todo) async {
+    logInfo(
+        "Updating todo in database with title: ${todo.title}  body: ${todo.body} completed: ${todo.completed}  type: ${todo.type}");
     TodoHive todoHive = TodoHive.fromTodo(todo: todo);
     int id = todo.id!;
     await Hive.box('todos').put(id, todoHive);
