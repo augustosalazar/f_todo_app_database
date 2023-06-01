@@ -49,6 +49,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _item(Todo element, int posicion) {
+    logInfo('(UI)creating item on List with id ${element.id}');
     return Dismissible(
       key: Key('todo${element.id}'),
       background: Container(
