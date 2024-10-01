@@ -92,7 +92,7 @@ void main() {
     // when testing sqflite the key should be todo1
     // when testing hive the key should be todo0
     // Delete the first item
-    await tester.drag(find.byKey(const Key('todo1')), const Offset(500.0, 0.0));
+    await tester.drag(find.byKey(const Key('todo0')), const Offset(500.0, 0.0));
     await tester.pumpAndSettle();
 
     // Should find one item on the list
