@@ -27,13 +27,15 @@ jobs:
     runs-on: macos-latest
     steps:
       - name: 📚 Git Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: 🦋 Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: "stable"
-          cache: true
+          flutter-version-file: pubspec.yaml # path to pubspec.yaml
+      
+      - run: flutter --version
 
       - name: 🌐 Flutter Enable Web
         run: flutter config --enable-web
