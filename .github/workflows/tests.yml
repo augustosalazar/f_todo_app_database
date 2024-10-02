@@ -22,29 +22,27 @@ jobs:
   #     - run: flutter pub get
   #     - run: flutter test integration_test
 
- integration-test:
+  integration-test:
     name: Run Smoke Tests
     runs-on: macos-latest
     steps:
       - name: 📚 Git Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: 🦋 Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: stable
+          channel: "stable"
           cache: true
-      
-      - run: flutter --version
 
       - name: 🌐 Flutter Enable Web
         run: flutter config --enable-web
 
-      - name: 🚀 Start Chrome Driver
+      - name: 🚀 Start Safari Driver
         run: |
-          brew install --cask chromedriver
-          chromedriver --port=4444 &
+          sudo safaridriver --enable
+          safaridriver --port 4444 &
 
       - name: 🧪 Run Integration test
         run: |
-          flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart -d web-server --release --browser-name=chrome
+          flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart -d web-server --release --browser-name=safari
