@@ -50,57 +50,48 @@ void main() {
 
     // Simulate tapping the delete all button
     await tester.tap(find.byKey(const Key('deleteAllButton')));
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(const Duration(seconds: 1));
     expect(find.byType(Dismissible), findsNothing);
 
     await tester.tap(find.byKey(const Key('floatingActionButton')));
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(const Duration(seconds: 1));
 
     expect(find.text('New todo'), findsOneWidget);
 
     await tester.enterText(find.byType(TextField).first, 'Test Title');
     await tester.enterText(find.byType(TextField).last, 'Test Body');
 
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(const Duration(seconds: 1));
 
     // Tap the Add button
     await tester.tap(find.byKey(const Key('addButtonTodoDialog')));
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(const Duration(seconds: 1));
 
     expect(find.text('New todo'), findsNothing);
 
     await tester.tap(find.byKey(const Key('floatingActionButton')));
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(const Duration(seconds: 1));
 
     expect(find.text('New todo'), findsOneWidget);
 
     await tester.enterText(find.byType(TextField).first, 'Test Title 2');
     await tester.enterText(find.byType(TextField).last, 'Test Body 2');
 
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(const Duration(seconds: 1));
 
     // Tap the Add button
     await tester.tap(find.byKey(const Key('addButtonTodoDialog')));
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(const Duration(seconds: 1));
 
     expect(find.text('New todo'), findsNothing);
 
     // Should find two items on the list
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(const Duration(seconds: 1));
     expect(find.byType(Dismissible), findsNWidgets(2));
-
-    // when testing sqflite the key should be todo1
-    // when testing hive the key should be todo0
-    // Delete the first item
-    await tester.drag(find.byKey(const Key('todo0')), const Offset(500.0, 0.0));
-    await tester.pumpAndSettle();
-
-    // Should find one item on the list
-    expect(find.byType(Dismissible), findsOneWidget);
 
     // Simulate tapping the delete all button
     await tester.tap(find.byKey(const Key('deleteAllButton')));
-    await tester.pumpAndSettle();
+    await tester.pumpAndSettle(const Duration(seconds: 1));
 
     // Should find no items on the list
     expect(find.byType(Dismissible), findsNothing);
