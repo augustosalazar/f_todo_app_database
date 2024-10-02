@@ -50,48 +50,48 @@ void main() {
 
     // Simulate tapping the delete all button
     await tester.tap(find.byKey(const Key('deleteAllButton')));
-    await tester.pumpAndSettle(const Duration(milliseconds: 500));
+    await tester.pumpAndSettle();
     expect(find.byType(Dismissible), findsNothing);
 
     await tester.tap(find.byKey(const Key('floatingActionButton')));
-    await tester.pumpAndSettle(const Duration(milliseconds: 500));
+    await tester.pumpAndSettle();
 
     expect(find.text('New todo'), findsOneWidget);
 
     await tester.enterText(find.byType(TextField).first, 'Test Title');
     await tester.enterText(find.byType(TextField).last, 'Test Body');
 
-    await tester.pumpAndSettle(const Duration(milliseconds: 500));
+    await tester.pumpAndSettle();
 
     // Tap the Add button
     await tester.tap(find.byKey(const Key('addButtonTodoDialog')));
-    await tester.pumpAndSettle(const Duration(milliseconds: 500));
+    await tester.pumpAndSettle();
 
     expect(find.text('New todo'), findsNothing);
 
     await tester.tap(find.byKey(const Key('floatingActionButton')));
-    await tester.pumpAndSettle(const Duration(milliseconds: 500));
+    await tester.pumpAndSettle();
 
     expect(find.text('New todo'), findsOneWidget);
 
     await tester.enterText(find.byType(TextField).first, 'Test Title 2');
     await tester.enterText(find.byType(TextField).last, 'Test Body 2');
 
-    await tester.pumpAndSettle(const Duration(milliseconds: 500));
+    await tester.pumpAndSettle();
 
     // Tap the Add button
     await tester.tap(find.byKey(const Key('addButtonTodoDialog')));
-    await tester.pumpAndSettle(const Duration(milliseconds: 500));
+    await tester.pumpAndSettle();
 
     expect(find.text('New todo'), findsNothing);
 
     // Should find two items on the list
-    await tester.pumpAndSettle(const Duration(milliseconds: 500));
+    await tester.pumpAndSettle();
     expect(find.byType(Dismissible), findsNWidgets(2));
 
     // Simulate tapping the delete all button
     await tester.tap(find.byKey(const Key('deleteAllButton')));
-    await tester.pumpAndSettle(const Duration(milliseconds: 500));
+    await tester.pumpAndSettle();
 
     // Should find no items on the list
     expect(find.byType(Dismissible), findsNothing);
