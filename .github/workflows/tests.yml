@@ -2,8 +2,7 @@ name: test-my-app
 
 on:
   push:
-    branches:
-      - main
+    branches: [ "master" ]
 
 jobs:
   # IOS:
