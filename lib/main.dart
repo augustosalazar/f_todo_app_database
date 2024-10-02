@@ -8,12 +8,10 @@ import 'domain/repositories/todo_repository.dart';
 import 'ui/controllers/todo_controller.dart';
 import 'ui/todoapp.dart';
 
-Future<List<Box>> _openBox() async {
-  List<Box> boxList = [];
+Future<void> _openBox() async {
   await Hive.initFlutter();
   Hive.registerAdapter(TodoHiveAdapter());
-  boxList.add(await Hive.openBox("todos"));
-  return boxList;
+  await Hive.openBox("todos");
 }
 
 void main() async {
@@ -23,6 +21,7 @@ void main() async {
     ),
   );
   WidgetsFlutterBinding.ensureInitialized();
+
   await _openBox();
   Get.put(TodoRepository());
   Get.put(TodoUseCase());

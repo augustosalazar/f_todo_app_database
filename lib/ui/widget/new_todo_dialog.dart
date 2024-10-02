@@ -17,64 +17,82 @@ class _NewTodoDialogState extends State<NewTodoDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      backgroundColor: Colors.yellow[200],
-      title: Text(
-        'New todo',
-        style: TextStyle(color: Theme.of(context).primaryColor, fontSize: 20.0),
-      ),
-      content: Column(children: <Widget>[
-        TextField(
-          decoration: const InputDecoration(
-            labelText: 'Title',
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return AlertDialog(
+          backgroundColor: Colors.yellow[200],
+          contentPadding: const EdgeInsets.all(16.0),
+          title: Text(
+            'New todo',
+            style: TextStyle(
+                color: Theme.of(context).primaryColor, fontSize: 20.0),
           ),
-          controller: controllerTitle,
-          autofocus: true,
-        ),
-        TextField(
-          decoration: const InputDecoration(
-            labelText: 'Body',
+          content: SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints:
+                  BoxConstraints(maxHeight: constraints.maxHeight * 0.6),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  TextField(
+                    decoration: const InputDecoration(
+                      labelText: 'Title',
+                    ),
+                    controller: controllerTitle,
+                    autofocus: true,
+                  ),
+                  const SizedBox(height: 16),
+                  TextField(
+                    decoration: const InputDecoration(
+                      labelText: 'Body',
+                    ),
+                    controller: controllerBody,
+                  ),
+                  const SizedBox(height: 16),
+                  TodoTypeDropdown(
+                    key: const Key('todoTypeDropdown'),
+                    selected: _dropSelected,
+                    onChangedValue: (value) => setState(() {
+                      _dropSelected = value;
+                    }),
+                  ),
+                ],
+              ),
+            ),
           ),
-          controller: controllerBody,
-          autofocus: true,
-        ),
-        Expanded(
-          child: TodoTypeDropdown(
-            key: const Key('todoTypeDropdown'),
-            selected: _dropSelected,
-            onChangedValue: (value) => setState(() {
-              _dropSelected = value;
-            }),
-          ),
-        ),
-      ]),
-      actions: <Widget>[
-        OutlinedButton(
-          child: Text('Cancel',
-              style: TextStyle(
-                  color: Theme.of(context).primaryColor, fontSize: 16.0)),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        OutlinedButton(
-          key: const Key('addButtonTodoDialog'),
-          child: Text('Add',
-              style: TextStyle(
-                  color: Theme.of(context).primaryColor, fontSize: 16.0)),
-          onPressed: () {
-            final todo = Todo(
-                title: controllerTitle.value.text,
-                body: controllerBody.value.text,
-                completed: 0,
-                type: Todo.visibilityFromString(_dropSelected));
-            controllerTitle.clear();
-            controllerBody.clear();
+          actions: <Widget>[
+            OutlinedButton(
+              child: Text(
+                'Cancel',
+                style: TextStyle(
+                    color: Theme.of(context).primaryColor, fontSize: 16.0),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            OutlinedButton(
+              key: const Key('addButtonTodoDialog'),
+              child: Text(
+                'Add',
+                style: TextStyle(
+                    color: Theme.of(context).primaryColor, fontSize: 16.0),
+              ),
+              onPressed: () {
+                final todo = Todo(
+                    title: controllerTitle.value.text,
+                    body: controllerBody.value.text,
+                    completed: 0,
+                    type: Todo.visibilityFromString(_dropSelected));
+                controllerTitle.clear();
+                controllerBody.clear();
 
-            Navigator.of(context).pop(todo);
-          },
-        ),
-      ],
+                Navigator.of(context).pop(todo);
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }
