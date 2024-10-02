@@ -22,19 +22,29 @@ class _HomePageState extends State<HomePage> {
         title: const Text("Todo App"),
         actions: [
           IconButton(
-              key: const Key('deleteAllButton'),
-              onPressed: () {
-                todoController.removeAll();
-              },
-              icon: const Icon(Icons.delete_forever))
+            key: const Key('deleteAllButton'),
+            onPressed: () {
+              todoController.removeAll();
+            },
+            icon: const Icon(Icons.delete_forever),
+          )
         ],
       ),
-      body: _list(),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return Padding(
+            padding: EdgeInsets.symmetric(
+                horizontal: constraints.maxWidth > 600 ? 32.0 : 8.0),
+            child: _list(),
+          );
+        },
+      ),
       floatingActionButton: FloatingActionButton(
-          key: const Key('floatingActionButton'),
-          onPressed: _addTodo,
-          tooltip: 'Add task',
-          child: const Icon(Icons.add)),
+        key: const Key('floatingActionButton'),
+        onPressed: _addTodo,
+        tooltip: 'Add task',
+        child: const Icon(Icons.add),
+      ),
     );
   }
 
@@ -53,17 +63,15 @@ class _HomePageState extends State<HomePage> {
     return Dismissible(
       key: Key('todo${element.id}'),
       background: Container(
-          color: Colors.red,
-          alignment: Alignment.centerLeft,
-          child: const Padding(
-            padding: EdgeInsets.only(left: 20),
-            child: Text(
-              "Deleting",
-              style: TextStyle(color: Colors.white),
-            ),
-          )),
+        color: Colors.red,
+        alignment: Alignment.centerLeft,
+        padding: const EdgeInsets.only(left: 20),
+        child: const Text(
+          "Deleting",
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
       onDismissed: (direction) {
-        // Remove the item from the data source.
         todoController.removeItem(element);
       },
       child: Card(
@@ -71,12 +79,13 @@ class _HomePageState extends State<HomePage> {
         margin: const EdgeInsets.all(4.0),
         color: element.completed == 1 ? Colors.blueGrey : Colors.yellow[200],
         child: ListTile(
-            contentPadding: const EdgeInsets.all(10.0),
-            leading: _itemIcon(element),
-            title: _itemTitle(element),
-            subtitle: _itemSubTitle(element),
-            isThreeLine: true,
-            onTap: () => _onTap(context, element, posicion)),
+          contentPadding: const EdgeInsets.all(10.0),
+          leading: _itemIcon(element),
+          title: _itemTitle(element),
+          subtitle: _itemSubTitle(element),
+          isThreeLine: true,
+          onTap: () => _onTap(context, element, posicion),
+        ),
       ),
     );
   }
@@ -101,8 +110,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _itemTitle(Todo item) {
-    return Text(item.title,
-        style: const TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold));
+    return Text(
+      item.title,
+      style: const TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
+    );
   }
 
   Widget _itemSubTitle(Todo item) {
