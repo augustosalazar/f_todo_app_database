@@ -1,9 +1,10 @@
-import 'package:get/get.dart';
 import '../entities/todo.dart';
-import '../repositories/todo_repository.dart';
+import '../repositories/i_todo_repository.dart';
 
 class TodoUseCase {
-  TodoRepository repository = Get.find();
+  final ITodoRepository repository;
+
+  TodoUseCase(this.repository);
 
   Future<void> addTodo(Todo todo) async => await repository.addTodo(todo);
 

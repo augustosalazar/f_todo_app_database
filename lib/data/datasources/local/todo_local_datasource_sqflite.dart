@@ -2,8 +2,9 @@ import 'dart:async';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import '../../../domain/entities/todo.dart';
+import 'i_todo_local_datasource.dart';
 
-class TodoLocalDataSource {
+class TodoLocalDataSourceSqflite implements ITodoLocalDataSource {
   Database? _database;
 
   Future<Database> get database async {
@@ -23,16 +24,7 @@ class TodoLocalDataSource {
         'CREATE TABLE todos (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, body TEXT, completed INTEGER, type TEXT)');
   }
 
-  Future<void> addTodo(Todo todo) async {
-    final db = await database;
-
-    await db.insert(
-      'todos',
-      todo.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
-  }
-
+  @override
   Future<List<Todo>> getAllTodos() async {
     // Get a reference to the database.
     final db = await database;
@@ -46,19 +38,33 @@ class TodoLocalDataSource {
     });
   }
 
+  @override
+  Future<void> addTodo(Todo todo) async {
+    final db = await database;
+
+    await db.insert(
+      'todos',
+      todo.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  @override
+  Future<void> updateTodo(Todo todo) async {
+    Database db = await database;
+    await db
+        .update('todos', todo.toMap(), where: 'id = ?', whereArgs: [todo.id]);
+  }
+
+  @override
   Future<void> deleteTodo(id) async {
     Database db = await database;
     await db.delete('todos', where: 'id = ?', whereArgs: [id]);
   }
 
+  @override
   Future<void> deleteAll() async {
     Database db = await database;
     await db.delete('todos');
-  }
-
-  Future<void> updateTodo(Todo todo) async {
-    Database db = await database;
-    await db
-        .update('todos', todo.toMap(), where: 'id = ?', whereArgs: [todo.id]);
   }
 }
