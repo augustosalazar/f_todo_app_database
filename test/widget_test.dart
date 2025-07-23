@@ -23,7 +23,7 @@ class MockTodoController extends GetxService
   }
 
   @override
-  void addItem(item) {
+  Future<void> addItem(item) async {
     todoList.add(item);
   }
 }
