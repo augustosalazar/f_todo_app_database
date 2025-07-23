@@ -23,7 +23,7 @@ class Todo {
         (e) => e.toString().split('.')[1].toUpperCase() == value.toUpperCase());
   }
 
-  // convenience constructor to create a Word object
+  // convenience constructor to create a Todo object
   Todo.fromMap(Map<dynamic, dynamic> map) {
     id = map['id'];
     title = map['title'];

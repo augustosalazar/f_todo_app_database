@@ -5,15 +5,10 @@ import '../../domain/entities/todo.dart';
 import '../controllers/todo_controller.dart';
 import '../widget/new_todo_dialog.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class HomePage extends StatelessWidget {
+  HomePage({super.key});
 
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  TodoController todoController = Get.find();
+  final TodoController todoController = Get.find<TodoController>();
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +36,14 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         key: const Key('floatingActionButton'),
-        onPressed: _addTodo,
+        onPressed: () {
+          showModalBottomSheet<Todo>(
+            context: context,
+            isScrollControlled: true,
+            backgroundColor: Colors.transparent,
+            builder: (_) => const NewTodoDialog(),
+          );
+        },
         tooltip: 'Add task',
         child: const Icon(Icons.add),
       ),
@@ -49,13 +51,30 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _list() {
-    return Obx(() => ListView.builder(
-          itemCount: todoController.todoList.length,
-          itemBuilder: (context, posicion) {
-            var element = todoController.todoList[posicion];
-            return _item(element, posicion);
-          },
-        ));
+    return todoController.todoList.isEmpty
+        ? const Center(child: Text("No todos available"))
+        : GetX<TodoController>(
+            init: todoController,
+            builder: (controller) {
+              logInfo(
+                  '(UI)creating List with ${todoController.todoList.length} items');
+              return ListView.builder(
+                itemCount: todoController.todoList.length,
+                itemBuilder: (context, posicion) {
+                  var element = todoController.todoList[posicion];
+                  return _item(element, posicion);
+                },
+              );
+            },
+          );
+
+    // Obx(() => ListView.builder(
+    //       itemCount: todoController.todoList.length,
+    //       itemBuilder: (context, posicion) {
+    //         var element = todoController.todoList[posicion];
+    //         return _item(element, posicion);
+    //       },
+    //     ));
   }
 
   Widget _item(Todo element, int posicion) {
@@ -84,7 +103,7 @@ class _HomePageState extends State<HomePage> {
           title: _itemTitle(element),
           subtitle: _itemSubTitle(element),
           isThreeLine: true,
-          onTap: () => _onTap(context, element, posicion),
+          onTap: () => todoController.setCompleted(element),
         ),
       ),
     );
@@ -98,15 +117,7 @@ class _HomePageState extends State<HomePage> {
         return const Icon(Icons.call, size: 72.0);
       case TodoType.HOME_WORK:
         return const Icon(Icons.contacts, size: 72.0);
-      default:
-        return const Icon(Icons.dialpad, size: 72.0);
     }
-  }
-
-  void _onTap(BuildContext context, Todo location, int posicion) {
-    logInfo(location.title);
-    logInfo('$posicion');
-    todoController.setCompleted(location);
   }
 
   Widget _itemTitle(Todo item) {
@@ -118,20 +129,5 @@ class _HomePageState extends State<HomePage> {
 
   Widget _itemSubTitle(Todo item) {
     return Text(item.body, style: const TextStyle(fontSize: 10.0));
-  }
-
-  _addTodo() async {
-    final todo = await showDialog<Todo>(
-      context: context,
-      builder: (BuildContext context) {
-        return const NewTodoDialog(
-          key: Key('newTodoDialog'),
-        );
-      },
-    );
-
-    if (todo != null) {
-      todoController.addItem(todo);
-    }
   }
 }

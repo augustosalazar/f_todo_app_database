@@ -1,96 +1,124 @@
+import 'package:f_todo_app_database/ui/controllers/todo_controller.dart';
 import 'package:flutter/material.dart';
 
 import '../../domain/entities/todo.dart';
 import 'todo_type_dropdown.dart';
 
 class NewTodoDialog extends StatefulWidget {
-  const NewTodoDialog({Key? key}) : super(key: key);
+  const NewTodoDialog({super.key});
 
   @override
   State<NewTodoDialog> createState() => _NewTodoDialogState();
 }
 
 class _NewTodoDialogState extends State<NewTodoDialog> {
-  final controllerTitle = TextEditingController();
-  final controllerBody = TextEditingController();
-  String _dropSelected = "DEFAULT";
+  final _titleCtrl = TextEditingController();
+  final _bodyCtrl = TextEditingController();
+  final TodoController todoController = TodoController();
+  String _dropSelected = 'DEFAULT';
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return AlertDialog(
-          backgroundColor: Colors.yellow[200],
-          contentPadding: const EdgeInsets.all(16.0),
-          title: Text(
-            'New todo',
-            style: TextStyle(
-                color: Theme.of(context).primaryColor, fontSize: 20.0),
+    return DraggableScrollableSheet(
+      expand: false,
+      initialChildSize: 0.5,
+      minChildSize: 0.3,
+      maxChildSize: 0.9,
+      builder: (context, scrollController) {
+        return Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black26,
+                blurRadius: 8,
+              ),
+            ],
           ),
-          content: SingleChildScrollView(
-            child: ConstrainedBox(
-              constraints:
-                  BoxConstraints(maxHeight: constraints.maxHeight * 0.6),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  TextField(
-                    decoration: const InputDecoration(
-                      labelText: 'Title',
-                    ),
-                    controller: controllerTitle,
-                    autofocus: true,
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          child: SingleChildScrollView(
+            controller: scrollController,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Grab bar
+                Container(
+                  width: 40,
+                  height: 4,
+                  margin: const EdgeInsets.only(bottom: 16),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(2),
                   ),
-                  const SizedBox(height: 16),
-                  TextField(
-                    decoration: const InputDecoration(
-                      labelText: 'Body',
-                    ),
-                    controller: controllerBody,
-                  ),
-                  const SizedBox(height: 16),
-                  TodoTypeDropdown(
-                    key: const Key('todoTypeDropdown'),
-                    selected: _dropSelected,
-                    onChangedValue: (value) => setState(() {
-                      _dropSelected = value;
-                    }),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          actions: <Widget>[
-            OutlinedButton(
-              child: Text(
-                'Cancel',
-                style: TextStyle(
-                    color: Theme.of(context).primaryColor, fontSize: 16.0),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            OutlinedButton(
-              key: const Key('addButtonTodoDialog'),
-              child: Text(
-                'Add',
-                style: TextStyle(
-                    color: Theme.of(context).primaryColor, fontSize: 16.0),
-              ),
-              onPressed: () {
-                final todo = Todo(
-                    title: controllerTitle.value.text,
-                    body: controllerBody.value.text,
-                    completed: 0,
-                    type: Todo.visibilityFromString(_dropSelected));
-                controllerTitle.clear();
-                controllerBody.clear();
+                ),
 
-                Navigator.of(context).pop(todo);
-              },
+                Text(
+                  'New Todo',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+
+                const SizedBox(height: 16),
+
+                TextField(
+                  controller: _titleCtrl,
+                  decoration: const InputDecoration(
+                    labelText: 'Title',
+                    border: OutlineInputBorder(),
+                  ),
+                  autofocus: true,
+                ),
+
+                const SizedBox(height: 16),
+
+                TextField(
+                  controller: _bodyCtrl,
+                  decoration: const InputDecoration(
+                    labelText: 'Body',
+                    border: OutlineInputBorder(),
+                  ),
+                  maxLines: 3,
+                ),
+
+                const SizedBox(height: 16),
+
+                TodoTypeDropdown(
+                  key: const Key('todoTypeDropdown'),
+                  selected: _dropSelected,
+                  onChangedValue: (value) =>
+                      setState(() => _dropSelected = value),
+                ),
+
+                const SizedBox(height: 24),
+
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: const Text('Cancel'),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: ElevatedButton(
+                        key: const Key('addButtonTodoDialog'),
+                        onPressed: () async {
+                          await todoController.addTodo(
+                            _titleCtrl.text.trim(),
+                            _bodyCtrl.text.trim(),
+                            Todo.visibilityFromString(_dropSelected),
+                          );
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text('Add'),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-          ],
+          ),
         );
       },
     );

@@ -17,19 +17,14 @@ import 'package:mockito/mockito.dart';
 class MockTodoController extends GetxService
     with Mock
     implements TodoController {
-  final _todoList = <Todo>[].obs;
-
-  @override
-  List<Todo> get todoList => _todoList.value;
-
   @override
   void removeAll() async {
-    _todoList.clear();
+    todoList.clear();
   }
 
   @override
   void addItem(item) {
-    _todoList.add(item);
+    todoList.add(item);
   }
 }
 
@@ -63,7 +58,7 @@ void main() {
     Get.put<TodoController>(mockTodoController);
 
     // Build the HomePage widget
-    await tester.pumpWidget(const MaterialApp(home: HomePage()));
+    await tester.pumpWidget(MaterialApp(home: HomePage()));
 
     // Verify that the initial state is correct
     expect(find.text('Todo App'), findsOneWidget);
