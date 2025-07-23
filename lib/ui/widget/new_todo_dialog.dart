@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../domain/entities/todo.dart';
+import '../controllers/todo_controller.dart';
 import 'todo_type_dropdown.dart';
 
 class NewTodoDialog extends StatefulWidget {
-  const NewTodoDialog({Key? key}) : super(key: key);
+  const NewTodoDialog({super.key});
 
   @override
   State<NewTodoDialog> createState() => _NewTodoDialogState();
@@ -79,15 +81,15 @@ class _NewTodoDialogState extends State<NewTodoDialog> {
                     color: Theme.of(context).primaryColor, fontSize: 16.0),
               ),
               onPressed: () {
-                final todo = Todo(
-                    title: controllerTitle.value.text,
-                    body: controllerBody.value.text,
-                    completed: 0,
-                    type: Todo.visibilityFromString(_dropSelected));
+                TodoController controller = Get.find();
+                controller.addTodo(
+                  controllerTitle.value.text,
+                  controllerBody.value.text,
+                  Todo.visibilityFromString(_dropSelected),
+                );
                 controllerTitle.clear();
                 controllerBody.clear();
-
-                Navigator.of(context).pop(todo);
+                Navigator.of(context).pop();
               },
             ),
           ],

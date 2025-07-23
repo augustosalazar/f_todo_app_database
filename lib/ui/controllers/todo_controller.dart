@@ -1,7 +1,6 @@
 import 'package:f_todo_app_database/domain/use_case/todo_use_case.dart';
 import 'package:get/get.dart';
 import 'package:loggy/loggy.dart';
-import '../../data/mocks/mock_todo.dart';
 import '../../domain/entities/todo.dart';
 
 class TodoController extends GetxController {
@@ -16,22 +15,33 @@ class TodoController extends GetxController {
   TodoUseCase todoUseCase = Get.find();
 
   Future<void> getAllTodos() async {
-    logInfo("userController -> getAllUsers");
     var list = await todoUseCase.getAllTodos();
+    logInfo("userController-getAllUsers-${list.length} items");
     _todoList.value = list;
   }
 
-  void addItem(item) async {
+  Future<void> addTodo(title, body, type) async {
+    logInfo("userController -> addTodo");
+    Todo todo = Todo(
+      title: title,
+      body: body,
+      completed: 0,
+      type: type,
+    );
+    await addItem(todo);
+  }
+
+  Future<void> addItem(Todo item) async {
     await todoUseCase.addTodo(item);
     await getAllTodos();
   }
 
-  void removeItem(item) async {
+  Future<void> removeItem(item) async {
     await todoUseCase.deleteTodo(item.id);
     await getAllTodos();
   }
 
-  void setCompleted(Todo item) async {
+  Future<void> setCompleted(Todo item) async {
     item.completed == 0 ? item.completed = 1 : item.completed = 0;
     await todoUseCase.updateTodo(item);
     await getAllTodos();

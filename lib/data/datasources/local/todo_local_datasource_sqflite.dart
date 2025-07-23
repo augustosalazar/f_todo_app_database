@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:loggy/loggy.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import '../../../domain/entities/todo.dart';
@@ -31,6 +32,8 @@ class TodoLocalDataSourceSqflite implements ITodoLocalDataSource {
 
     // Query the table for all The Dogs.
     final List<Map<String, dynamic>> maps = await db.query('todos');
+
+    logInfo('Fetched ${maps.length} todos from local database');
 
     // Convert the List<Map<String, dynamic> into a List<Dog>.
     return List.generate(maps.length, (i) {
