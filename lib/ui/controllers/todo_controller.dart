@@ -31,7 +31,7 @@ class TodoController extends GetxController {
     await addItem(todo);
   }
 
-  Future<void> addItem(item) async {
+  Future<void> addItem(Todo item) async {
     await todoUseCase.addTodo(item);
     await getAllTodos();
   }
