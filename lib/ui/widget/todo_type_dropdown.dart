@@ -6,10 +6,10 @@ class TodoTypeDropdown extends StatelessWidget {
   final ValueChanged<String> onChangedValue;
 
   const TodoTypeDropdown({
-    Key? key,
+    super.key,
     required this.onChangedValue,
     required this.selected,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

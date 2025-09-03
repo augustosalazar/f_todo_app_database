@@ -12,7 +12,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:loggy/loggy.dart';
 
 Future<List<Box>> _openBox() async {
   List<Box> boxList = [];
