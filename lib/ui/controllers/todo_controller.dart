@@ -1,18 +1,22 @@
-import 'package:f_todo_app_database/domain/use_case/todo_use_case.dart';
+import 'package:f_todo_app_database/data/repositories/todo_repository.dart';
+import 'package:f_todo_app_database/domain/repositories/i_todo_repository.dart';
 import 'package:get/get.dart';
 import 'package:loggy/loggy.dart';
 import '../../domain/entities/todo.dart';
 
 class TodoController extends GetxController {
+  final ITodoRepository todoUseCase;
   final _todoList = <Todo>[].obs;
-
-  TodoController() {
-    getAllTodos();
-  }
 
   List<Todo> get todoList => _todoList.value;
 
-  TodoUseCase todoUseCase = Get.find();
+  TodoController(this.todoUseCase);
+
+  @override
+  void onInit() {
+    getAllTodos();
+    super.onInit();
+  }
 
   Future<void> getAllTodos() async {
     var list = await todoUseCase.getAllTodos();
@@ -47,7 +51,7 @@ class TodoController extends GetxController {
     await getAllTodos();
   }
 
-  void removeAll() async {
+  Future<void> removeAll() async {
     await todoUseCase.deleteAll();
     await getAllTodos();
   }

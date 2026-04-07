@@ -3,11 +3,11 @@ import '../../../domain/entities/todo.dart';
 abstract class ITodoLocalDataSource {
   Future<List<Todo>> getAllTodos();
 
-  addTodo(Todo todo);
+  Future<void> addTodo(Todo todo);
 
-  updateTodo(Todo todo);
+  Future<void> updateTodo(Todo todo);
 
-  deleteTodo(index);
+  Future<void> deleteTodo(int id);
 
-  deleteAll();
+  Future<void> deleteAll();
 }

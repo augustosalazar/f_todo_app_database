@@ -6,36 +6,30 @@ class TodoTypeDropdown extends StatelessWidget {
   final ValueChanged<String> onChangedValue;
 
   const TodoTypeDropdown({
-    Key? key,
+    super.key,
     required this.onChangedValue,
     required this.selected,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
-    return returnDropDown();
-  }
-
-  Widget returnDropDown() {
     logInfo('TodoTypeDropdown $selected');
-    return DropdownButton<String>(
-      value: selected,
-      icon: const Icon(Icons.arrow_downward),
-      iconSize: 24,
-      elevation: 16,
-      style: const TextStyle(color: Colors.deepPurple),
-      underline: Container(
-        height: 2,
-        color: Colors.deepPurpleAccent,
-      ),
-      onChanged: (value) => onChangedValue(value!),
-      items: <String>["DEFAULT", "CALL", "HOME_WORK"]
-          .map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
+
+    return DropdownMenu<String>(
+      initialSelection: selected,
+      width: double.infinity,
+      label: const Text('Type'),
+      leadingIcon: const Icon(Icons.category_rounded),
+      dropdownMenuEntries: const [
+        DropdownMenuEntry(value: "DEFAULT", label: "Default"),
+        DropdownMenuEntry(value: "CALL", label: "Call"),
+        DropdownMenuEntry(value: "HOME_WORK", label: "Home work"),
+      ],
+      onSelected: (value) {
+        if (value != null) {
+          onChangedValue(value);
+        }
+      },
     );
   }
 }

@@ -1,4 +1,6 @@
+import 'package:f_todo_app_database/core/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'pages/home_page.dart';
 
 class TodoApp extends StatelessWidget {
@@ -6,7 +8,9 @@ class TodoApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
+      theme: AppTheme.light,
+      darkTheme: AppTheme.dark,
       title: 'TODO APP',
       debugShowCheckedModeBanner: false,
       home: HomePage(),

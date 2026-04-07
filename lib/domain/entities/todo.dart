@@ -29,7 +29,7 @@ class Todo {
     title = map['title'];
     body = map['body'];
     completed = map['completed'];
-    type = TodoType.values[int.parse(map['type'])];
+    type = TodoType.values[map['type']];
   }
 
   // convenience method to create a Map from this Word object

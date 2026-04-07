@@ -25,6 +25,7 @@ class TodoHive extends HiveObject {
 
   Todo toTodo() {
     return Todo(
+      id: key as int?,
       title: title,
       body: body,
       completed: completed,

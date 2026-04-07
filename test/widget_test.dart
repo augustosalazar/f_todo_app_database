@@ -38,16 +38,26 @@ class MockTodoController extends GetxService
 }
 
 void main() {
-  testWidgets('HomePage Test', (WidgetTester tester) async {
+  setUp(() {
+    Get.testMode = true;
+    Get.reset();
     final mockTodoController = MockTodoController();
     Get.put<TodoController>(mockTodoController);
+  });
 
+  tearDown(() {
+    Get.reset();
+  });
+
+  testWidgets('HomePage Test', (WidgetTester tester) async {
     await tester.pumpWidget(
       GetMaterialApp(home: HomePage()),
     );
 
     // initially no Dismissible
     expect(find.byType(Dismissible), findsNothing);
+
+    final mockTodoController = Get.find<TodoController>();
 
     // add one
     await mockTodoController.addItem(Todo(

@@ -14,15 +14,23 @@ class TodoLocalDataSourceSqflite implements ITodoLocalDataSource {
     return _database!;
   }
 
-  _initDatabase() async {
-    String path = join(await getDatabasesPath(), 'todo_database.db');
-    return await openDatabase(path, version: 1, onCreate: _onCreate);
+  Future<Database> _initDatabase() async {
+    final path = join(await getDatabasesPath(), 'todo_database.db');
+    return openDatabase(
+      path,
+      version: 2,
+      onCreate: _onCreate,
+      onUpgrade: (db, oldVersion, newVersion) async {
+        await db.execute('DROP TABLE IF EXISTS todos');
+        await _onCreate(db, newVersion);
+      },
+    );
   }
 
   //create a table called todos that holds instances on the Todo class
-  Future _onCreate(Database db, int version) async {
+  Future<void> _onCreate(Database db, int version) async {
     await db.execute(
-        'CREATE TABLE todos (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, body TEXT, completed INTEGER, type TEXT)');
+        'CREATE TABLE todos (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, body TEXT, completed INTEGER, type INTEGER)');
   }
 
   @override
@@ -54,13 +62,17 @@ class TodoLocalDataSourceSqflite implements ITodoLocalDataSource {
 
   @override
   Future<void> updateTodo(Todo todo) async {
+    if (todo.id == null) {
+      throw ArgumentError('Todo id cannot be null when updating');
+    }
+
     Database db = await database;
     await db
         .update('todos', todo.toMap(), where: 'id = ?', whereArgs: [todo.id]);
   }
 
   @override
-  Future<void> deleteTodo(id) async {
+  Future<void> deleteTodo(int id) async {
     Database db = await database;
     await db.delete('todos', where: 'id = ?', whereArgs: [id]);
   }
