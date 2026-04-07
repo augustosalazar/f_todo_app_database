@@ -64,6 +64,7 @@ class _NewTodoDialogState extends State<NewTodoDialog> {
               ),
               const SizedBox(height: 24),
               TextField(
+                key: const Key('titleTextFieldTodoDialog'),
                 controller: controllerTitle,
                 autofocus: true,
                 decoration: InputDecoration(
@@ -80,6 +81,7 @@ class _NewTodoDialogState extends State<NewTodoDialog> {
               ),
               const SizedBox(height: 16),
               TextField(
+                key: const Key('bodyTextFieldTodoDialog'),
                 controller: controllerBody,
                 maxLines: 3,
                 decoration: InputDecoration(

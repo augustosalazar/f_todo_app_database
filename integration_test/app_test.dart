@@ -65,6 +65,33 @@ Future<Widget> createHomeScreenSqflite() async {
   );
 }
 
+Future<void> pumpUntilFound(
+  WidgetTester tester,
+  Finder finder, {
+  Duration timeout = const Duration(seconds: 5),
+  Duration step = const Duration(milliseconds: 100),
+}) async {
+  final end = DateTime.now().add(timeout);
+
+  while (DateTime.now().isBefore(end)) {
+    await tester.pump(step);
+    if (finder.evaluate().isNotEmpty) {
+      return;
+    }
+  }
+
+  throw TestFailure('Widget not found within timeout: $finder');
+}
+
+void debugPrintAllTexts(WidgetTester tester) {
+  final textWidgets = find.byType(Text).evaluate();
+
+  for (final element in textWidgets) {
+    final widget = element.widget as Text;
+    debugPrint('TEXT FOUND: "${widget.data}"');
+  }
+}
+
 Future<void> runCommonTodoFlow(WidgetTester tester) async {
   expect(find.text('Todo App'), findsOneWidget);
   expect(find.byKey(const Key('deleteAllButton')), findsOneWidget);
@@ -79,14 +106,22 @@ Future<void> runCommonTodoFlow(WidgetTester tester) async {
 
   expect(find.text('New todo'), findsOneWidget);
 
-  await tester.enterText(find.byType(TextField).first, 'Test Title');
-  await tester.enterText(find.byType(TextField).last, 'Test Body');
+  await tester.enterText(
+      find.byKey(const Key('titleTextFieldTodoDialog')), 'Test Title');
+  await tester.enterText(
+      find.byKey(const Key('bodyTextFieldTodoDialog')), 'Test Body');
   await tester.pumpAndSettle();
 
   await tester.tap(find.byKey(const Key('addButtonTodoDialog')));
   await tester.pumpAndSettle();
 
+  //await pumpUntilFound(tester, find.text('Test Title'));
+
+  debugPrintAllTexts(tester);
+
   expect(find.text('New todo'), findsNothing);
+  expect(find.text('Test Title'), findsOneWidget);
+  expect(find.text('Test Body'), findsOneWidget);
 
   await tester.tap(find.byKey(const Key('floatingActionButton')));
   await tester.pumpAndSettle();
