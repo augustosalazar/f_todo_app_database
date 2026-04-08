@@ -1,10 +1,3 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:f_todo_app_database/domain/entities/todo.dart';
 import 'package:f_todo_app_database/ui/controllers/todo_controller.dart';
 import 'package:f_todo_app_database/ui/pages/home_page.dart';
@@ -69,7 +62,6 @@ void main() {
       GetMaterialApp(home: HomePage()),
     );
 
-    // initially no Dismissible
     expect(find.byType(Dismissible), findsNothing);
 
     final mockTodoController = Get.find<TodoController>();
@@ -83,7 +75,52 @@ void main() {
       type: TodoType.DEFAULT,
     ));
     await tester.pumpAndSettle();
+
     expect(find.byType(Dismissible), findsOneWidget);
+    expect(find.byKey(const Key('todoTitle_Test')), findsOneWidget);
+    expect(find.byKey(const Key('todoBody_Test')), findsOneWidget);
+
+    // verify initial incomplete state
+    expect(find.byIcon(Icons.radio_button_unchecked_rounded), findsOneWidget);
+    expect(find.byIcon(Icons.check_circle_rounded), findsNothing);
+
+    final titleBefore =
+        tester.widget<Text>(find.byKey(const Key('todoTitle_Test')));
+    final bodyBefore =
+        tester.widget<Text>(find.byKey(const Key('todoBody_Test')));
+
+    expect(titleBefore.style?.decoration, isNot(TextDecoration.lineThrough));
+    expect(bodyBefore.style?.decoration, isNot(TextDecoration.lineThrough));
+
+    // edit/update by toggling completed state
+    await tester.tap(find.byKey(const Key('todoTap_Test')));
+    await tester.pumpAndSettle();
+
+    expect(find.byIcon(Icons.check_circle_rounded), findsOneWidget);
+    expect(find.byIcon(Icons.radio_button_unchecked_rounded), findsNothing);
+
+    final titleAfterComplete =
+        tester.widget<Text>(find.byKey(const Key('todoTitle_Test')));
+    final bodyAfterComplete =
+        tester.widget<Text>(find.byKey(const Key('todoBody_Test')));
+
+    expect(titleAfterComplete.style?.decoration, TextDecoration.lineThrough);
+    expect(bodyAfterComplete.style?.decoration, TextDecoration.lineThrough);
+
+    // toggle back
+    await tester.tap(find.byKey(const Key('todoTap_Test')));
+    await tester.pumpAndSettle();
+
+    expect(find.byIcon(Icons.radio_button_unchecked_rounded), findsOneWidget);
+    expect(find.byIcon(Icons.check_circle_rounded), findsNothing);
+
+    final titleAfterUndo =
+        tester.widget<Text>(find.byKey(const Key('todoTitle_Test')));
+    final bodyAfterUndo =
+        tester.widget<Text>(find.byKey(const Key('todoBody_Test')));
+
+    expect(titleAfterUndo.style?.decoration, isNot(TextDecoration.lineThrough));
+    expect(bodyAfterUndo.style?.decoration, isNot(TextDecoration.lineThrough));
 
     // add another
     await mockTodoController.addItem(Todo(
@@ -94,6 +131,7 @@ void main() {
       type: TodoType.DEFAULT,
     ));
     await tester.pumpAndSettle();
+
     expect(find.byType(Dismissible), findsNWidgets(2));
 
     // delete all
