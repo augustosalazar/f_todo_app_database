@@ -10,5 +10,6 @@ To have in for for the integration test:
 
 flutter drive --driver=test_driver/integration_test.dart --target=integration_test/app_test.dart -d chrome
 
+![pruebaTodoApp](https://github.com/user-attachments/assets/4a397431-a45b-4d43-b6ed-a5f9f9b1bc50)
 
-<img src=![pruebaTodoApp](https://github.com/user-attachments/assets/4a397431-a45b-4d43-b6ed-a5f9f9b1bc50) width="300" />
+<img src= width="300" />
