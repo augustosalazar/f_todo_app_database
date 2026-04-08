@@ -141,6 +141,7 @@ class HomePage extends StatelessWidget {
                       children: [
                         Text(
                           todo.title,
+                          key: Key('todoTitle_${todo.title}'),
                           style: theme.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.w700,
                             decoration:
@@ -150,6 +151,7 @@ class HomePage extends StatelessWidget {
                         const SizedBox(height: 6),
                         Text(
                           todo.body,
+                          key: Key('todoBody_${todo.title}'),
                           style: theme.textTheme.bodyMedium?.copyWith(
                             color: theme.colorScheme.onSurfaceVariant,
                             decoration:

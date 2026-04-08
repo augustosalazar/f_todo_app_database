@@ -35,6 +35,21 @@ class MockTodoController extends GetxService
   Future<void> removeItem(item) async {
     _todoList.removeWhere((i) => i.id == item.id);
   }
+
+  @override
+  Future<void> setCompleted(Todo todo) async {
+    final index = _todoList.indexWhere((i) => i.id == todo.id);
+    if (index == -1) return;
+
+    final current = _todoList[index];
+    _todoList[index] = Todo(
+      id: current.id,
+      title: current.title,
+      body: current.body,
+      completed: current.completed == 1 ? 0 : 1,
+      type: current.type,
+    );
+  }
 }
 
 void main() {

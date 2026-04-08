@@ -107,29 +107,35 @@ Future<void> runCommonTodoFlow(WidgetTester tester) async {
   expect(find.text('New todo'), findsOneWidget);
 
   await tester.enterText(
-      find.byKey(const Key('titleTextFieldTodoDialog')), 'Test Title');
+    find.byKey(const Key('titleTextFieldTodoDialog')),
+    'Test Title',
+  );
   await tester.enterText(
-      find.byKey(const Key('bodyTextFieldTodoDialog')), 'Test Body');
+    find.byKey(const Key('bodyTextFieldTodoDialog')),
+    'Test Body',
+  );
   await tester.pumpAndSettle();
 
   await tester.tap(find.byKey(const Key('addButtonTodoDialog')));
   await tester.pumpAndSettle();
 
-  //await pumpUntilFound(tester, find.text('Test Title'));
-
-  debugPrintAllTexts(tester);
-
   expect(find.text('New todo'), findsNothing);
-  expect(find.text('Test Title'), findsOneWidget);
-  expect(find.text('Test Body'), findsOneWidget);
+  expect(find.byKey(const Key('todoTitle_Test Title')), findsOneWidget);
+  expect(find.byKey(const Key('todoBody_Test Title')), findsOneWidget);
 
   await tester.tap(find.byKey(const Key('floatingActionButton')));
   await tester.pumpAndSettle();
 
   expect(find.text('New todo'), findsOneWidget);
 
-  await tester.enterText(find.byType(TextField).first, 'Test Title 2');
-  await tester.enterText(find.byType(TextField).last, 'Test Body 2');
+  await tester.enterText(
+    find.byKey(const Key('titleTextFieldTodoDialog')),
+    'Test Title 2',
+  );
+  await tester.enterText(
+    find.byKey(const Key('bodyTextFieldTodoDialog')),
+    'Test Body 2',
+  );
   await tester.pumpAndSettle();
 
   await tester.tap(find.byKey(const Key('addButtonTodoDialog')));
@@ -137,7 +143,54 @@ Future<void> runCommonTodoFlow(WidgetTester tester) async {
 
   expect(find.text('New todo'), findsNothing);
   expect(find.byType(Dismissible), findsNWidgets(2));
+  expect(find.byKey(const Key('todoTitle_Test Title 2')), findsOneWidget);
+  expect(find.byKey(const Key('todoBody_Test Title 2')), findsOneWidget);
 
+  // ----- EDITION / UPDATE: toggle completed state -----
+
+  // Initial state: both incomplete
+  expect(find.byIcon(Icons.radio_button_unchecked_rounded), findsNWidgets(2));
+  expect(find.byIcon(Icons.check_circle_rounded), findsNothing);
+
+  final titleBefore =
+      tester.widget<Text>(find.byKey(const Key('todoTitle_Test Title')));
+  final bodyBefore =
+      tester.widget<Text>(find.byKey(const Key('todoBody_Test Title')));
+
+  expect(titleBefore.style?.decoration, isNot(TextDecoration.lineThrough));
+  expect(bodyBefore.style?.decoration, isNot(TextDecoration.lineThrough));
+
+  // Toggle first todo to completed
+  await tester.tap(find.byKey(const Key('todoTap_Test Title')));
+  await tester.pumpAndSettle();
+
+  expect(find.byIcon(Icons.check_circle_rounded), findsOneWidget);
+  expect(find.byIcon(Icons.radio_button_unchecked_rounded), findsOneWidget);
+
+  final titleAfterComplete =
+      tester.widget<Text>(find.byKey(const Key('todoTitle_Test Title')));
+  final bodyAfterComplete =
+      tester.widget<Text>(find.byKey(const Key('todoBody_Test Title')));
+
+  expect(titleAfterComplete.style?.decoration, TextDecoration.lineThrough);
+  expect(bodyAfterComplete.style?.decoration, TextDecoration.lineThrough);
+
+  // Toggle back to incomplete
+  await tester.tap(find.byKey(const Key('todoTap_Test Title')));
+  await tester.pumpAndSettle();
+
+  expect(find.byIcon(Icons.check_circle_rounded), findsNothing);
+  expect(find.byIcon(Icons.radio_button_unchecked_rounded), findsNWidgets(2));
+
+  final titleAfterUndo =
+      tester.widget<Text>(find.byKey(const Key('todoTitle_Test Title')));
+  final bodyAfterUndo =
+      tester.widget<Text>(find.byKey(const Key('todoBody_Test Title')));
+
+  expect(titleAfterUndo.style?.decoration, isNot(TextDecoration.lineThrough));
+  expect(bodyAfterUndo.style?.decoration, isNot(TextDecoration.lineThrough));
+
+  // Delete all
   await tester.tap(find.byKey(const Key('deleteAllButton')));
   await tester.pumpAndSettle();
 
